@@ -1,0 +1,17 @@
+version: "3.7"
+name: ai-toolkit
+services:
+  web:
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    container_name: web
+    ports:
+      - "80:8080"
+      - "443:443"
+    build:
+      context: "./"
+      dockerfile: ./docker/php/Dockerfile
+    volumes:
+      - ./app:/app/
+    #command: rr serve
+    network_mode: bridge
