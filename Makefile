@@ -2,7 +2,7 @@
 export $(test -e || shell sed 's/=.*//' docker/.env)
 
 # common docker
-DOCKER_COMPOSE_CMD = docker-compose
+DOCKER_COMPOSE_CMD = docker compose
 DOCKER_PHP_EXECUTE = docker exec web
 
 ## Show help
@@ -13,7 +13,7 @@ help:
 init: build hooks start composer migrate ## Init project
 
 build: ## Build docker containers
-	docker-compose build
+	${DOCKER_COMPOSE_CMD} build
 
 start: ## Start docker containers
 	${DOCKER_COMPOSE_CMD} up -d
@@ -25,7 +25,7 @@ composer: ## Install composer dependencies
 	${DOCKER_PHP_EXECUTE} composer install --no-scripts --no-progress --no-cache --no-interaction
 
 test: ## Run tests
-	${DOCKER_PHP_EXECUTE} php bin/phpunit
+	${DOCKER_PHP_EXECUTE} vendor/bin/codecept run
 
 shell: ## Enter to container
 	docker exec -it web sh
