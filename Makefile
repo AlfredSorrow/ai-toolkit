@@ -45,10 +45,10 @@ csfix: ## Fix code style
 	${DOCKER_PHP_EXECUTE} vendor/bin/php-cs-fixer fix --verbose --show-progress=dots
 
 csfix-show: ## Show code style errors
-	${DOCKER_PHP_EXECUTE} vendor/bin/php-cs-fixer dry-run --verbose --show-progress=dots
+	${DOCKER_PHP_EXECUTE} vendor/bin/php-cs-fixer fix --verbose --show-progress=dots --allow-risky=yes --config=.php-cs-fixer-all.dist.php --dry-run
 
 csfix-risky: ## Fix code style with risky
-	${DOCKER_PHP_EXECUTE} vendor/bin/php-cs-fixer fix --verbose --show-progress=dots --allow-risky=yes
+	${DOCKER_PHP_EXECUTE} vendor/bin/php-cs-fixer fix --verbose --show-progress=dots --allow-risky=yes --config=.php-cs-fixer-all.dist.php
 
 phpstan: ## Запуск phpstan (статический анализ кода)
 	${DOCKER_PHP_EXECUTE} vendor/bin/phpstan analyse -c phpstan.neon --memory-limit=1024M

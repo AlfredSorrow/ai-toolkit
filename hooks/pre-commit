@@ -8,7 +8,14 @@ if [ "$FILES" ]; then
 
   CS_FIXER_STATUS=$?
   if [[ "$CS_FIXER_STATUS" != 0 ]]; then
-      echo "CSFixer failed"
+      echo "CSFixer auto-fix failed"
+      exit 1;
+  fi
+
+  docker exec web vendor/bin/php-cs-fixer fix --verbose --show-progress=dots --allow-risky=yes --config=.php-cs-fixer-all.dist.php --dry-run $FILES_IN_DOCKER
+  CS_FIXER_CHECK_STATUS=$?
+  if [[ "$CS_FIXER_CHECK_STATUS" != 0 ]]; then
+      echo "CSFixer check failed"
       exit 1;
   fi
 
