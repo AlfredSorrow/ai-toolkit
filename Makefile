@@ -2,7 +2,7 @@
 export $(test -e || shell sed 's/=.*//' docker/.env)
 
 # common docker
-DOCKER_COMPOSE_CMD = docker-compose
+DOCKER_COMPOSE_CMD = docker compose
 DOCKER_PHP_EXECUTE = docker exec web
 
 ## Show help
@@ -13,7 +13,7 @@ help:
 init: build hooks start composer migrate ## Init project
 
 build: ## Build docker containers
-	docker-compose build
+	${DOCKER_COMPOSE_CMD} build
 
 start: ## Start docker containers
 	${DOCKER_COMPOSE_CMD} up -d
