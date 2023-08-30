@@ -1,0 +1,64 @@
+{% extends base_template %}
+
+{% block sonata_nav %}{% endblock sonata_nav %}
+
+{% block logo %}{% endblock logo %}
+
+{% block sonata_left_side %}{% endblock sonata_left_side %}
+
+{% block body_attributes %}class="sonata-bc login-page
+	{% if _use_icheck %}sonata-icheck
+	{% endif %}"
+{% endblock %}
+
+{% block sonata_wrapper %}
+	<div class="login-box">
+		{% block login_box_header %}
+			<div class="login-logo">
+				<a href="{{ path('sonata_admin_dashboard') }}">
+					{% if 'icon' == sonata_config.getOption('logo_content') or 'all' == sonata_config.getOption('logo_content') %}
+						<div>
+							<img style="width:64px;" src="{{ asset(sonata_config.logo) }}" alt="{{ sonata_config.title }}">
+						</div>
+					{% endif %}
+					{% if 'text' == sonata_config.getOption('logo_content') or 'all' == sonata_config.getOption('logo_content') %}
+						<span>{{ "Register" }}</span>
+					{% endif %}
+				</a>
+			</div>
+		{% endblock %}
+		<div class="login-box-body">
+			<p class="login-box-msg">{{ 'title_user_registration'|trans({}, 'SonataUserBundle') }}</p>
+			{% block user_register_error %}
+				{% for error in errors %}
+					<div class="alert alert-danger alert-error" role="alert">{{ error.message }}</div>
+				{% endfor %}
+			{% endblock %}
+			{{ form_start(registrationForm) }}
+			<div class="form-group has-feedback">
+				{{ form_label(registrationForm.username) }}
+				{{ form_widget(registrationForm.username, {'attr': {'class': 'form-control'}}) }}
+			</div>
+			<div class="form-group has-feedback">
+				{{ form_label(registrationForm.email) }}
+				{{ form_widget(registrationForm.email, {'attr': {'class': 'form-control'}}) }}
+			</div>
+			<div class="form-group has-feedback">
+				{{ form_label(registrationForm.plainPassword) }}
+				{{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'form-control'}}) }}
+			</div>
+
+			<div class="row">
+				<div class="col-xs-8"></div>
+				<div class="col-xs-4">
+					<button type="submit" name="submit" class="btn btn-primary btn-block btn-flat">
+						<i class="fa fa-btn fa-user"></i>
+						{{ 'title_user_registration'|trans({}, 'SonataUserBundle') }}
+					</button>
+				</div>
+			</div>
+
+			{{ form_end(registrationForm) }}
+		</div>
+	</div>
+{% endblock sonata_wrapper %}

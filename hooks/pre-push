@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+# colors
+RESET="\e[0m"
+RED="\e[0;31m"
+GREEN="\e[0;32m"
+
+function run_tests() {
+  if make "test"; then
+      printf "${GREEN}"
+      echo ""
+      echo "Tests passed successfully :3"
+      echo ""
+      printf "${RESET}"
+      exit 0
+  fi
+
+  printf "${RED}"
+  echo ""
+  echo "Tests failed, correct and come back >:)"
+  echo ""
+  printf "${RESET}"
+  exit 1
+}
+
+function is_behind_remote() {
+    if [[ $(git rev-list --count HEAD...origin/$(git rev-parse --abbrev-ref HEAD)) != '0' ]]; then
+        return 1
+    fi
+
+    return 0
+}
+
+if is_behind_remote == 0; then
+    exit 0
+fi
+
+# run tests
+run_tests

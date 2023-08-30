@@ -25,7 +25,7 @@ composer: ## Install composer dependencies
 	${DOCKER_PHP_EXECUTE} composer install --no-scripts --no-progress --no-cache --no-interaction
 
 test: ## Run tests
-	${DOCKER_PHP_EXECUTE} php bin/phpunit
+	${DOCKER_PHP_EXECUTE} vendor/bin/codecept run
 
 shell: ## Enter to container
 	docker exec -it web sh
