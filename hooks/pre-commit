@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+## Прогоним все файлы, которые будут включены в коммит, через cs-fixer и phpstan до коммита
+FILES=`git status --porcelain=v2 | grep -E '^[0-9] [AM].*(app).*\.php$' | cut -d ' ' -f 9 | tr '\n' ' '`
+if [ "$FILES" ]; then
+  FILES_IN_DOCKER=$(sed -E 's/app\///g;t' <<< "$FILES")
+  docker exec web vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php --verbose --show-progress=dots $FILES_IN_DOCKER
+
+  CS_FIXER_STATUS=$?
+  if [[ "$CS_FIXER_STATUS" != 0 ]]; then
+      echo "CSFixer failed"
+      exit 1;
+  fi
+
+  docker exec web vendor/bin/phpstan analyse $FILES_IN_DOCKER --memory-limit=500M -c phpstan.neon
+  PHP_STAN_STATUS=$?
+  if [[ "$PHP_STAN_STATUS" != 0 ]]; then
+    echo “Files did not pass phpstan validation” 
+    exit 1;
+  fi
+  git add $FILES
+  exit 0;
+fi
