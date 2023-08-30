@@ -13,5 +13,22 @@ services:
       dockerfile: ./docker/php/Dockerfile
     volumes:
       - ./app:/app/
-    #command: rr serve
+    command: rr serve -c .rr.dev.yaml 
     network_mode: bridge
+    depends_on:
+      - database
+
+###> doctrine/doctrine-bundle ###
+  database:
+    container_name: database
+    ports:
+      - "5432:5432"
+    image: postgres:${POSTGRES_VERSION:-15}-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-app}
+      # You should definitely change the password in production
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-!ChangeMe!}
+      POSTGRES_USER: ${POSTGRES_USER:-app}
+    volumes:
+      - ./docker/db/data:/var/lib/postgresql/data:rw
+###< doctrine/doctrine-bundle ###

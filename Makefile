@@ -10,13 +10,16 @@ help:
 	@printf "\033[33m%s:\033[0m\n" 'Доступные команды'
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z0-9_-]+:.*?## / {printf "  \033[32m%-18s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
-init: build start composer #migrate ## Init project
+init: build hooks start composer migrate ## Init project
 
 build: ## Build docker containers
 	docker-compose build
 
 start: ## Start docker containers
 	${DOCKER_COMPOSE_CMD} up -d
+
+migrate: ## Start migrations
+	${DOCKER_PHP_EXECUTE} php bin/console d:m:m --no-interaction
 
 composer: ## Install composer dependencies
 	${DOCKER_PHP_EXECUTE} composer install --no-scripts --no-progress --no-cache --no-interaction
@@ -30,15 +33,28 @@ shell: ## Enter to container
 stop: ## Stop docker containers
 	${DOCKER_COMPOSE_CMD} stop
 
-restart: stop start ## Restart docker containers
+hooks: ## Install git hooks (can be ingored with --no-verify flag)
+	git config core.hooksPath ./hooks && chmod +x ./hooks/*
+
+cache-clear: ## Clear cache
+	${DOCKER_PHP_EXECUTE} bin/console cache:clear
+
+restart: stop start cache-clear ## Restart docker containers
+
+csfix: ## Fix code style
+	${DOCKER_PHP_EXECUTE} vendor/bin/php-cs-fixer fix --verbose --show-progress=dots
+
+csfix-show: ## Show code style errors
+	${DOCKER_PHP_EXECUTE} vendor/bin/php-cs-fixer dry-run --verbose --show-progress=dots
+
+csfix-risky: ## Fix code style with risky
+	${DOCKER_PHP_EXECUTE} vendor/bin/php-cs-fixer fix --verbose --show-progress=dots --allow-risky=yes
+
+phpstan: ## Запуск phpstan (статический анализ кода)
+	${DOCKER_PHP_EXECUTE} vendor/bin/phpstan analyse -c phpstan.neon --memory-limit=1024M
 
 status: ## Show docker containers status
 	${DOCKER_COMPOSE_CMD} ps
 
-clean: ## Stop and remove docker containers
-#	-docker-compose run --no-deps we sh -c "\
-#    		php ./artisan config:clear; php ./artisan route:clear; php ./artisan view:clear; php ./artisan cache:clear file"
+clean: ## Stop docker containers
 	${DOCKER_COMPOSE_CMD} down -v
-
-migrate: ## Start migrations
-	${DOCKER_PHP_EXECUTE} php artisan migrate --force

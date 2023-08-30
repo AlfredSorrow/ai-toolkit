@@ -28,6 +28,8 @@ RUN set -eux; \
     opcache \
     zip \
     sockets \
+    pdo \
+    pdo_pgsql \
     ;
 
 # install composer

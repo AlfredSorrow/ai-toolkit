@@ -8,6 +8,10 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "baldinof/roadrunner-bundle": "^3.0",
+        "doctrine/doctrine-migrations-bundle": "^3.0",
+        "sonata-project/admin-bundle": "^4.26",
+        "sonata-project/doctrine-orm-admin-bundle": "^4.13",
+        "sonata-project/user-bundle": "^5.10",
         "symfony/console": "6.3.*",
         "symfony/dotenv": "6.3.*",
         "symfony/flex": "^2",
@@ -60,7 +64,21 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "6.3.*"
+            "require": "6.3.*",
+            "docker": true
         }
+    },
+    "require-dev": {
+        "codeception/codeception": "^5.0",
+        "codeception/module-asserts": "*",
+        "codeception/module-phpbrowser": "^3.0",
+        "codeception/module-symfony": "^3.1",
+        "friendsofphp/php-cs-fixer": "^3.23",
+        "phpstan/phpstan": "^1.10",
+        "qossmic/deptrac-shim": "^1.0",
+        "roave/security-advisories": "dev-latest",
+        "symfony/maker-bundle": "^1.50",
+        "symfony/stopwatch": "6.3.*",
+        "symfony/web-profiler-bundle": "6.3.*"
     }
 }

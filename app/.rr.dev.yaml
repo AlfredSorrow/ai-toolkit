@@ -2,6 +2,8 @@ version: "3"
 
 server:
   command: "php public/index.php"
+#  relay: "unix:///var/run/rr.sock"
+#  relay_timeout: 2s
   env:
     - APP_RUNTIME: Baldinof\RoadRunnerBundle\Runtime\Runtime
 
@@ -9,6 +11,7 @@ http:
   address: 0.0.0.0:8080
   middleware: [ "static", "gzip" ]
   pool:
+  #  allocate_timeout : 5s
     debug: true
   uploads:
     forbid: [ ".php", ".exe", ".bat" ]
