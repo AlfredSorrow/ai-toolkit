@@ -20,4 +20,11 @@ class VendorRepository extends AbstractEntityRepository
     {
         return Vendor::class;
     }
+
+    public function getVendor(string $id): Vendor
+    {
+        $vendor = $this->find($id);
+
+        return $vendor;
+    }
 }
