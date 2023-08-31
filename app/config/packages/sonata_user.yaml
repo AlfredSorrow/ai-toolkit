@@ -5,5 +5,8 @@ sonata_user:
     email:
       address: "%env(MAILER_FROM)%"
       sender_name: Backoffice
+  impersonating:
+      route: sonata_admin_dashboard
+
   #mailer: custom.mailer.service.id
   #security_acl: true
