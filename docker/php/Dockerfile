@@ -30,6 +30,7 @@ RUN set -eux; \
     sockets \
     pdo \
     pdo_pgsql \
+    openssl \
     ;
 
 # install composer

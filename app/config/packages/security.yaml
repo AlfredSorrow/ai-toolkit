@@ -27,6 +27,7 @@ security:
             pattern: /admin(.*)
             provider: sonata_user_bundle
             context: user
+            switch_user: true
             form_login:
                 login_path: sonata_user_admin_security_login
                 check_path: sonata_user_admin_security_check
