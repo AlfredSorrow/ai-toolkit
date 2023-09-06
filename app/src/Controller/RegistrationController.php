@@ -32,7 +32,7 @@ class RegistrationController extends AbstractController
             );
 
             $user->setEnabled(true);
-            $user->setRoles(['ROLE_ADMIN']);
+            $user->setRoles(['ROLE_ADMIN', 'ROLE_SONATA_ADMIN', 'ROLE_ALLOWED_TO_SWITCH', 'ROLE_SUPER_ADMIN']);
             $entityManager->persist($user);
             $entityManager->flush();
 
