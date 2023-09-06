@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Integration\Client\OpenAI;
+namespace App\Integration\OpenAI\Client;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
+use GuzzleHttp\MessageFormatter;
+use GuzzleHttp\Middleware;
 use OpenAI\Contracts\ClientContract;
 use OpenAI\Contracts\Resources\AudioContract;
 use OpenAI\Contracts\Resources\ChatContract;
@@ -33,9 +35,9 @@ class OpenAIClient implements ClientContract
         $stack = HandlerStack::create();
 
         $stack->push(
-            \GuzzleHttp\Middleware::log(
+            Middleware::log(
                 $this->logger,
-                new \GuzzleHttp\MessageFormatter(\GuzzleHttp\MessageFormatter::SHORT)
+                new MessageFormatter(MessageFormatter::SHORT)
             )
         );
 

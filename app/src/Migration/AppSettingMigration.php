@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace DoctrineMigrations;
+namespace App\Migration;
 
+use App\Encryption\Crypto;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 
@@ -16,11 +17,17 @@ abstract class AppSettingMigration extends AbstractMigration
         return '';
     }
 
+    protected function getSettingDescription(): string
+    {
+        return '';
+    }
+
     final public function up(Schema $schema): void
     {
-        $this->addSql('INSERT INTO app_setting (id, value, created_at, updated_at) VALUES (?, ?, NOW(), NOW())', [
+        $this->addSql('INSERT INTO app_setting (id, value, created_at, updated_at, description) VALUES (?, ?, NOW(), NOW(), ?)', [
             $this->getSettingId(),
-            json_encode($this->getSettingValue()),
+            Crypto::encrypt($this->getSettingValue()),
+            $this->getSettingDescription(),
         ]);
     }
 

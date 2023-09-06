@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Integration\Client;
+namespace App\Integration;
 
-use App\Integration\Client\OpenAI\OpenAIClient;
+use App\Integration\OpenAI\Client\OpenAIClient;
 use Psr\Log\LoggerInterface;
 
 final readonly class ClientFactory

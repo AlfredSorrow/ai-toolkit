@@ -5,17 +5,18 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Encryption\Crypto;
+use App\Entity\Interface\EntityInterface;
 use App\Repository\AppSettingRepository;
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Exception;
+use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 
+#[HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: AppSettingRepository::class)]
-class AppSetting
+class AppSetting implements EntityInterface
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
     #[ORM\Column]
     private string $id;
 
@@ -27,6 +28,9 @@ class AppSetting
 
     #[ORM\Column]
     private DateTimeImmutable $updatedAt;
+
+    #[ORM\Column(type: Types::TEXT, options: ['default' => ''])]
+    private string $description = '';
 
     public function __construct(
         string $id,
@@ -44,20 +48,19 @@ class AppSetting
         return $this->id;
     }
 
+    public function hasId(): bool
+    {
+        return isset($this->id);
+    }
+
     public function getValue(): string
     {
-        // FIXME: This is a hack to get around the fact that the database is already populated with unencrypted values.
-        try {
-            return Crypto::decrypt($this->value);
-        } catch (Exception) {
-            return $this->value;
-        }
+        return Crypto::decrypt($this->value);
     }
 
     public function setValue(string $value): void
     {
         $this->value = Crypto::encrypt($value);
-        $this->updatedAt = new DateTimeImmutable();
     }
 
     public function getCreatedAt(): DateTimeImmutable
@@ -68,5 +71,21 @@ class AppSetting
     public function getUpdatedAt(): DateTimeImmutable
     {
         return $this->updatedAt;
+    }
+
+    #[ORM\PreUpdate]
+    public function preUpdate(): void
+    {
+        $this->updatedAt = new DateTimeImmutable();
+    }
+
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(string $description): void
+    {
+        $this->description = $description;
     }
 }

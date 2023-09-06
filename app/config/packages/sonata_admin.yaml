@@ -9,11 +9,16 @@ sonata_admin:
             icon: 'fa fa-gear'
             items:
               - admin.user_vendor_setting
-          sonata.admin.group.users:
-            label: Users
-            icon: 'fa fa-users'
+          sonata.admin.group.chat:
+            label: Chat
+            icon: 'fa fa-comments'
+          sonata.admin.group.internal:
+            label: System
+            icon: 'fa fa-wrench'
             items:
               - sonata.user.admin.user
+              - admin.model
+              - admin.app_setting
 
 sonata_block:
     blocks:
@@ -26,3 +31,11 @@ services:
         arguments: ['@security.token_storage']
         tags:
             - { name: sonata.admin, model_class: App\Entity\VendorSetting, controller: App\Controller\VendorSettingAdminController, manager_type: orm, group: Settings, label: Vendor }
+    admin.model:
+        class: App\Admin\ModelAdmin
+        tags:
+            - { name: sonata.admin, model_class: App\Entity\Model, controller: ~, manager_type: orm, group: System, label: Model }
+    admin.app_setting:
+        class: App\Admin\AppSettingAdmin
+        tags:
+            - { name: sonata.admin, model_class: App\Entity\AppSetting, controller: ~, manager_type: orm, group: admin, label: AppSetting }
