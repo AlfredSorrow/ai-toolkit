@@ -53,3 +53,7 @@
 
 # PostgreSQL
 /docker/db
+
+# .idea
+.idea
+

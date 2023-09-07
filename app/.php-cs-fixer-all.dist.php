@@ -5,7 +5,8 @@ declare(strict_types=1);
 $finder = (new PhpCsFixer\Finder())
     ->in(__DIR__)
     ->exclude('var')
-    ->exclude('tests/_support');
+    ->exclude('tests/_support')
+;
 
 $safeRules = require_once __DIR__.'/.php-cs-fixer-safe.php';
 
@@ -18,4 +19,5 @@ $riskyRules = [
 
 return (new PhpCsFixer\Config())
     ->setRules(array_merge($safeRules, $riskyRules))
-    ->setFinder($finder);
+    ->setFinder($finder)
+    ->setRiskyAllowed(true);

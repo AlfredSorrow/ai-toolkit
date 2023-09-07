@@ -64,4 +64,9 @@ class Vendor implements EntityInterface
     {
         return $this->models;
     }
+
+    public function isOpenAi(): bool
+    {
+        return $this->getId() === self::CODE_OPENAI;
+    }
 }

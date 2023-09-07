@@ -6,36 +6,37 @@ namespace App\Admin;
 
 use App\Entity\User;
 use App\Entity\VendorSetting;
-use App\Form\DataMapper\VendorSettingDataMapper;
-use App\Form\OpenAIFormType;
+use App\Form\DataMapper\ModelProfileDataMapper;
+use App\Form\OpenAiChatProfileType;
+use App\Repository\ModelRepository;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
 use Sonata\AdminBundle\Form\FormMapper;
+use Sonata\AdminBundle\Form\Type\ChoiceFieldMaskType;
 use Sonata\AdminBundle\Show\ShowMapper;
 use Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-final class VendorSettingAdmin extends AbstractAdmin
+class ModelProfileAdmin extends AbstractAdmin
 {
-    public function __construct(private readonly TokenStorageInterface $tokenStorage)
-    {
+    public function __construct(
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly ModelRepository $modelRepository
+    ) {
         parent::__construct();
     }
 
     protected function configureDatagridFilters(DatagridMapper $filter): void
     {
-        $filter
-            ->add('vendor');
     }
 
     protected function configureListFields(ListMapper $list): void
     {
         $list
             ->add('id')
-            ->add('vendor')
             ->add('createdAt')
             ->add('updatedAt')
             ->add(ListMapper::NAME_ACTIONS, null, [
@@ -49,20 +50,17 @@ final class VendorSettingAdmin extends AbstractAdmin
 
     protected function configureFormFields(FormMapper $form): void
     {
-        $isEntityCreated = $this->getSubject()->hasId();
-
         $this->restrictIfNotAllowed();
 
         $form
-            ->add('vendor', null, [
-                'disabled' => $isEntityCreated,
-            ])
-            ->add('setting', OpenAIFormType::class);
+            ->add('name')
+            ->add('model', ChoiceFieldMaskType::class, ['choices' => $this->getChoices()])
+            ->add('setting', OpenAiChatProfileType::class);
 
         /** @var User */
         $currentUser = $this->tokenStorage->getToken()->getUser();
         $builder = $form->getFormBuilder();
-        $builder->setDataMapper(new VendorSettingDataMapper($currentUser));
+        $builder->setDataMapper(new ModelProfileDataMapper($currentUser, $this->modelRepository));
     }
 
     protected function configureShowFields(ShowMapper $show): void
@@ -70,8 +68,6 @@ final class VendorSettingAdmin extends AbstractAdmin
         $this->restrictIfNotAllowed();
         $show
             ->add('id')
-            ->add('setting')
-            ->add('vendor')
             ->add('createdAt')
             ->add('updatedAt');
     }
@@ -103,5 +99,19 @@ final class VendorSettingAdmin extends AbstractAdmin
         $query->setParameter('user', $currentUser);
 
         return $query;
+    }
+
+    /**
+     * @return array<string, int>
+     */
+    private function getChoices(): array
+    {
+        $models = $this->modelRepository->findAll();
+        $choices = [];
+        foreach ($models as $model) {
+            $choices[$model->getName()] = $model->getId();
+        }
+
+        return $choices;
     }
 }

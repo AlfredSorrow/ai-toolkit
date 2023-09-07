@@ -9,9 +9,10 @@ sonata_admin:
             icon: 'fa fa-gear'
             items:
               - admin.user_vendor_setting
-          sonata.admin.group.chat:
-            label: Chat
-            icon: 'fa fa-comments'
+              - admin.model_profile
+#          sonata.admin.group.chat:
+#            label: Chat
+#            icon: 'fa fa-comments'
           sonata.admin.group.internal:
             label: System
             icon: 'fa fa-wrench'
@@ -39,3 +40,8 @@ services:
         class: App\Admin\AppSettingAdmin
         tags:
             - { name: sonata.admin, model_class: App\Entity\AppSetting, controller: ~, manager_type: orm, group: admin, label: AppSetting }
+    admin.model_profile:
+        class: App\Admin\ModelProfileAdmin
+        arguments: ['@security.token_storage', '@App\Repository\ModelRepository']
+        tags:
+            - { name: sonata.admin, model_class: App\Entity\ModelProfile, controller: ~, manager_type: orm, group: Settings, label: Profile }

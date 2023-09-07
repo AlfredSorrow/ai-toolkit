@@ -9,4 +9,9 @@ enum ModelType: string
     case Chat = 'chat';
     case TextToImage = 'text-to-image';
     case Unknown = 'unknown';
+
+    public function isChat(): bool
+    {
+        return $this === self::Chat;
+    }
 }

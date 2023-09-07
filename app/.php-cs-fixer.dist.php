@@ -12,4 +12,5 @@ $safeRules = require_once __DIR__.'/.php-cs-fixer-safe.php';
 // Safe rules applied on commit
 return (new PhpCsFixer\Config())
     ->setRules($safeRules)
-    ->setFinder($finder);
+    ->setFinder($finder)
+    ->setRiskyAllowed(false);
