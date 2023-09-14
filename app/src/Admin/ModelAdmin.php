@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Admin;
 
+use App\Entity\Enum\ModelStatus;
 use App\Entity\Enum\ModelType;
 use App\Form\DataMapper\ModelDataMapper;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
@@ -34,6 +35,9 @@ final class ModelAdmin extends AbstractAdmin
             ->add('type', EnumType::class, [
                 'class' => ModelType::class,
             ])
+            ->add('status', EnumType::class, [
+                'class' => ModelStatus::class,
+            ])
             ->add(ListMapper::NAME_ACTIONS, null, [
                 'actions' => [
                     'show' => [],
@@ -48,6 +52,9 @@ final class ModelAdmin extends AbstractAdmin
             ->add('vendor')
             ->add('name')
             ->add('code')
+            ->add('status', EnumType::class, [
+                'class' => ModelStatus::class,
+            ])
             ->add('type', EnumType::class, [
                 'class' => ModelType::class,
             ]);

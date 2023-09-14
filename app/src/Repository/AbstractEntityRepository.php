@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -20,4 +23,9 @@ abstract class AbstractEntityRepository extends ServiceEntityRepository
     }
 
     abstract protected function getEntityClass(): string;
+
+    final protected function createPaginator(QueryBuilder|Query $builder, bool $fetchJoinCollection = true): Paginator
+    {
+        return new Paginator($builder, $fetchJoinCollection);
+    }
 }

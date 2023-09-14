@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Entity\Enum\ModelStatus;
 use App\Entity\Enum\ModelType;
 use App\Entity\Interface\EntityInterface;
 use App\Repository\ModelRepository;
@@ -41,6 +42,9 @@ class Model implements EntityInterface
     #[ORM\Column(enumType: ModelType::class, options: ['default' => ModelType::Unknown->value])]
     private ModelType $type;
 
+    #[ORM\Column(enumType: ModelType::class, options: ['default' => ModelStatus::Disabled->value])]
+    private ModelStatus $status;
+
     public function __construct(Vendor $vendor, string $code, ModelType $type = ModelType::Unknown)
     {
         $this->vendor = $vendor;
@@ -49,6 +53,7 @@ class Model implements EntityInterface
         $this->type = $type;
         $this->createdAt = new DateTimeImmutable();
         $this->updatedAt = new DateTimeImmutable();
+        $this->status = ModelStatus::Disabled;
     }
 
     public function getId(): int
@@ -106,6 +111,23 @@ class Model implements EntityInterface
     public function setType(ModelType $type): void
     {
         $this->type = $type;
+    }
+
+    /**
+     * boolean - thanks to Sonata, because it cannot render enum type yet, and thanks to PHP because it restricts toString on enum.
+     */
+    public function getStatus(bool $asValue = true): ModelStatus|string
+    {
+        if ($asValue) {
+            return $this->status->value;
+        }
+
+        return $this->status;
+    }
+
+    public function setStatus(ModelStatus $status): void
+    {
+        $this->status = $status;
     }
 
     public function setCode(string $code): void

@@ -74,7 +74,7 @@ class ModelProfileAdmin extends AbstractAdmin
 
     private function restrictIfNotAllowed(): void
     {
-        /** @var VendorSetting */
+        /** @var VendorSetting $vendorSetting */
         $vendorSetting = $this->getSubject();
         $currentUser = $this->tokenStorage->getToken()->getUser();
 
@@ -87,7 +87,7 @@ class ModelProfileAdmin extends AbstractAdmin
 
     protected function configureQuery(ProxyQueryInterface $query): ProxyQueryInterface
     {
-        /** @var ProxyQuery */
+        /** @var ProxyQuery $query */
         $query = parent::configureQuery($query);
 
         $rootAlias = current($query->getRootAliases());
@@ -106,7 +106,7 @@ class ModelProfileAdmin extends AbstractAdmin
      */
     private function getChoices(): array
     {
-        $models = $this->modelRepository->findAll();
+        $models = $this->modelRepository->findEnabled();
         $choices = [];
         foreach ($models as $model) {
             $choices[$model->getName()] = $model->getId();

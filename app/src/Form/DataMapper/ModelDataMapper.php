@@ -22,6 +22,7 @@ final readonly class ModelDataMapper implements DataMapperInterface
             $forms['name']->setData($data->getName());
             $forms['type']->setData($data->getType(false));
             $forms['code']->setData($data->getCode());
+            $forms['status']->setData($data->getStatus(false));
         }
     }
 
@@ -36,11 +37,13 @@ final readonly class ModelDataMapper implements DataMapperInterface
         $name = $forms['name']->getData();
         $type = $forms['type']->getData();
         $code = $forms['code']->getData();
+        $status = $forms['status']->getData();
 
         if ($data->hasId()) {
             $data->setName($name);
             $data->setType($type);
             $data->setCode($code);
+            $data->setStatus($status);
 
             return;
         }
@@ -52,5 +55,7 @@ final readonly class ModelDataMapper implements DataMapperInterface
             $code,
             $type,
         );
+
+        $data->setStatus($status);
     }
 }
