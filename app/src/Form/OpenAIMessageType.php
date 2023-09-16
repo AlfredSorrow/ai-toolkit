@@ -17,7 +17,7 @@ class OpenAIMessageType extends AbstractType
         $builder
             ->add('role', ChoiceType::class, [
                 'choices' => array_combine(Message::ROLES, Message::ROLES),
-                'help' => 'dadawd',
+                'help' => 'Initial messages to OpenAI chat. You can assign behavior to chat with System role',
             ])
             ->add('content', TextType::class)
         ;
